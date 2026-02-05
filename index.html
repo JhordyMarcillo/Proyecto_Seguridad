@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proyecto Final - Seguridad</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="estilo.css">
+</head>
+<body>
+
+<div class="main-container">
+    <header class="header">
+        <h1> Proyecto Final - Seguridad</h1> 
+    </header>
+
+    <nav class="tabs-nav">
+        <button class="tab-btn active" data-tab="registro" aria-label="Registro de usuario">
+            <span class="text">Registro</span>
+        </button>
+        <button class="tab-btn" data-tab="cifrado" aria-label="Cifrado RSA">
+            <span class="text">Cifrado RSA</span>
+        </button>
+        <button class="tab-btn" data-tab="clasico" aria-label="Cifrado Clásico">
+            <span class="text">Cifrado Clásico</span>
+        </button>
+        <button class="tab-btn" data-tab="usuarios" aria-label="Gestión de Usuarios">
+            <span class="text">Usuarios</span>
+        </button>
+    </nav>
+
+    <div class="tab-content active" id="registro">
+        <div class="section-card">
+            <h3> Registro de Usuario</h3>
+            <div id="registro-status" class="status-message"></div>
+            
+            <div class="form-group">
+                <label for="username">
+                    Nombre de Usuario
+                    <span title="El nombre de usuario debe tener al menos 3 caracteres"></span>
+                </label>
+                <div class="input-wrapper">
+                    <input type="text" id="username" class="form-control" placeholder="Ingrese el nombre de usuario">
+                    <button class="clear-btn" data-clear="username">×</button>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">
+                    Contraseña
+                    <span title="Se aplicará Bcrypt Hashing para almacenar de forma segura"></span>
+                </label>
+                <div class="input-wrapper">
+                    <input type="password" id="password" class="form-control" placeholder="Ingrese una contraseña segura que se podra cifrar con hash Bcrypt">
+                    <button class="clear-btn" data-clear="password">×</button>
+                    <button type="button" id="togglePassword" class="clear-btn" style="right: 40px;">👁️</button>
+                </div>
+                <div class="password-strength">
+                    <div class="password-strength-bar" id="password-strength-bar"></div>
+                </div>
+                <small id="password-hint" style="color: var(--gray); font-size: 0.85em; display: block; margin-top: 5px;"></small>
+            </div>
+            
+            <div class="form-group">
+                <label for="nota">
+                    Nota Sensible
+                    <span title="Esta información se cifrará con AES-256 para máxima seguridad"></span>
+                </label>
+                <div class="input-wrapper">
+                    <input type="text" id="nota" class="form-control" placeholder="Información sensible a cifrar con AES-256">
+                    <button class="clear-btn" data-clear="nota">×</button>
+                </div>
+            </div>
+            
+            <div class="btn-group">
+                <button class="btn btn-primary" id="btn-registrar">
+                 Registrar y Cifrar
+                </button>
+                <button class="btn btn-secondary" id="btn-limpiar-registro">
+                    Limpiar Formulario
+                </button>
+                <button class="btn btn-purple" id="btn-hash-password">
+                 Generar Hash Bcrypt
+                </button>
+            </div>
+            
+            <div class="action-result" id="registro-result"></div>
+        </div>
+    </div>
+
+    <div class="tab-content" id="cifrado">
+        <div class="section-card">
+            <h3></i> Cifrado con RSA</h3>
+            <div id="rsa-status" class="status-message"></div>
+            
+            <div class="form-group">
+                <label for="raw_data">
+                    Datos a Cifrar
+                    <span title="Usará el algoritmo RSA-OAEP para cifrado asimétrico"></span>
+                </label>
+                <div class="input-wrapper">
+                    <textarea id="raw_data" class="form-control" rows="3" placeholder="Ingrese el texto a cifrar con RSA"></textarea>
+                    <button class="clear-btn" data-clear="raw_data">×</button>
+                </div>
+            </div>
+            
+            <div class="btn-group">
+                <button class="btn btn-secondary" id="btn-cifrar-rsa">
+                     Cifrar con RSA
+                </button>
+                <button class="btn btn-purple" id="btn-cifrar-aes">
+                     Cifrar con AES
+                </button>
+                <button class="btn btn-secondary" id="btn-limpiar-rsa">
+                     Limpiar
+                </button>
+            </div>
+            
+            <div class="action-result" id="rsa-result"></div>
+        </div>
+    </div>
+
+    <div class="tab-content" id="clasico">
+        <div class="section-card">
+            <h3>Cifrado Clásico (Vigenère)</h3>
+            <div id="vigenere-status" class="status-message"></div>
+            
+            <div class="form-group">
+                <label for="vigenere_text">
+                    Texto a Procesar
+                    <span title="Cifrado Vigenère con clave personalizada"></span>
+                </label>
+                <div class="input-wrapper">
+                    <textarea id="vigenere_text" class="form-control" rows="3" placeholder="Ingrese el texto a cifrar o descifrar"></textarea>
+                    <button class="clear-btn" data-clear="vigenere_text">×</button>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="vigenere_key">Clave de Cifrado</label>
+                <div class="input-wrapper">
+                    <input type="text" id="vigenere_key" class="form-control" placeholder="Clave secreta para cifrado">
+                    <button class="clear-btn" data-clear="vigenere_key">×</button>
+                </div>
+            </div>
+            
+            <div class="btn-group">
+                <button class="btn btn-purple" id="btn-cifrar-clasico">
+                     Cifrar
+                </button>
+                <button class="btn btn-orange" id="btn-descifrar-clasico">
+                     Descifrar
+                </button>
+                <button class="btn btn-secondary" id="btn-limpiar-clasico">
+                     Limpiar
+                </button>
+            </div>
+            
+            <div class="action-result" id="clasico-result"></div>
+        </div>
+    </div>
+
+    <!-- Tab 4: Gestión de Usuarios -->
+    <div class="tab-content" id="usuarios">
+        <div class="section-card">
+            <h3></i> Gestión de Usuarios</h3>
+            <div id="usuarios-status" class="status-message"></div>
+            
+            <div class="btn-group">
+                <button class="btn btn-secondary" id="btn-listar-usuarios">
+                    <i class="fas fa-list"></i> Listar Todos
+                </button>
+            </div>
+            
+            <div id="usuarios-list" style="margin-top: 20px;">
+                <p class="empty-state" style="text-align: center; color: var(--gray); padding: 20px;">
+                    <i class="fas fa-inbox" style="font-size: 2em; margin-bottom: 10px; display: block;"></i>
+                    Use los botones para listar o buscar usuarios.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Output Section (Shared) -->
+    <div class="output-section">
+        <div class="output-header">
+            <h3><i class="fas fa-code"></i> Salida del Servidor</h3>
+        </div>
+        
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Procesando solicitud...</p>
+        </div>
+        
+        <pre id="output">{
+  "status": "ready",
+  "timestamp": "<span id="current-time"></span>",
+  "api_url": "http://127.0.0.1:8000"
+}</pre>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
